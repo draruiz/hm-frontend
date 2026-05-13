@@ -1,55 +1,85 @@
-# Copilot Instructions — Dra. Ruiz AI Frontend
+# Copilot Instructions — HealthyMind Frontend
 
-## Arquitectura: Feature-Sliced Design (FSD)
+> **This project handles Protected Health Information (PHI). All generated code MUST comply with HIPAA technical safeguards and US accessibility standards.**
 
-Organiza el código siguiendo las capas de FSD. Cada feature nueva debe vivir en su propia carpeta con la estructura:
+## Architecture: Feature-Sliced Design (FSD)
+
+Organize code following FSD layers. Each new feature must live in its own folder with this structure:
 
 ```
 src/
   features/
     <feature-name>/
-      ui/          # Componentes de presentación
-      model/       # Tipos, stores (zustand), schemas (zod)
-      api/         # Servicios y queries (react-query)
-      hooks/       # Custom hooks de la feature
-      index.ts     # Barrel export (API pública de la feature)
+      ui/          # Presentation components
+      model/       # Types, stores (zustand), schemas (zod)
+      api/         # Services and queries (react-query)
+      hooks/       # Feature-specific custom hooks
+      index.ts     # Barrel export (feature's public API)
   shared/
-    ui/            # Componentes globales reutilizables
-    hooks/         # Hooks compartidos
-    lib/           # Utilidades genéricas
-    config/        # Configuración global
+    ui/            # Global reusable components
+    hooks/         # Shared hooks
+    lib/           # Generic utilities
+    config/        # Global configuration
 ```
 
-- Las features no deben importar directamente de otras features; usa `shared/` para código compartido.
-- Exporta solo lo necesario desde el `index.ts` de cada feature.
+- Features must not import directly from other features; use `shared/` for shared code.
+- Only export what is necessary from each feature's `index.ts`.
 
-## Formularios: React Hook Form + Zod
+## Forms: React Hook Form + Zod (HIPAA-Compliant)
 
-- Todos los formularios deben usar `react-hook-form` con `@hookform/resolvers/zod`.
-- Define el schema Zod en `model/` (o junto al formulario si es pequeño) y deriva el tipo con `z.infer<typeof schema>`.
-- Usa `useForm<FormType>({ resolver: zodResolver(schema) })`.
-- Prefiere `Controller` o `register` según el componente MUI; evita estados locales para valores del formulario.
+- All forms must use `react-hook-form` with `@hookform/resolvers/zod`.
+- Define the Zod schema in `model/` (or alongside the form if small) and derive the type with `z.infer<typeof schema>`.
+- Use `useForm<FormType>({ resolver: zodResolver(schema) })`.
+- Prefer `Controller` or `register` depending on the MUI component; avoid local state for form values.
 
-## Reutilización de componentes globales
+### Input Sanitization & Validation (HIPAA / OWASP)
 
-- Antes de crear un componente nuevo, verifica si ya existe uno reutilizable en `src/components/` o `src/shared/ui/`.
-- Si un componente se usa en más de una feature, muévelo a `shared/ui/`.
-- Componentes comunes del proyecto: `Modal`, `Backdrop`, `DropdownMenu`, `Icon`, `ErrorBoundary`, botones en `button/`.
+- **Always sanitize user inputs** before sending them to the API. Strip HTML tags and dangerous characters using a shared utility (e.g., `shared/lib/sanitize.ts`).
+- Apply strict Zod schemas with:
+  - `.trim()` on all string fields.
+  - `.max()` length limits appropriate for each field.
+  - `.regex()` patterns for structured data (SSN, phone, email, ZIP, dates).
+  - Explicit `.refine()` or `.superRefine()` for cross-field and business-rule validation.
+- **Never** display raw user input in the DOM without sanitization — prevent XSS.
+- **Never** log, persist in local storage, or expose PHI (Protected Health Information) in the browser console, URL parameters, or client-side storage. Use only secure, encrypted transport (HTTPS) and server-managed sessions.
+- Disable browser autocomplete on PHI fields (`autoComplete="off"`) unless there is a justified UX reason to keep it.
+- Mark PHI-containing form fields with `aria-*` attributes for accessibility but **never** include PHI in `data-*` attributes or other DOM-queryable metadata.
+- Use `inputMode` and `type` attributes correctly to restrict on-screen keyboards and input (e.g., `type="password"` for sensitive fields, `inputMode="numeric"` for numeric-only).
 
-## Performance en animaciones
+### Session & Data Handling
 
-- Prioriza `transform` y `opacity` para animaciones CSS (propiedades que no disparan layout/paint).
-- Usa `will-change` con moderación y solo cuando haya jank medible.
-- Para Motion (framer-motion): prefiere `layout` animations y `AnimatePresence` con `mode="wait"`.
-- Envuelve componentes pesados con animación en `React.memo` o `React.lazy` si no son visibles al cargar.
-- Prefiere `requestAnimationFrame` sobre `setTimeout` para sincronizar con el frame del navegador.
-- GSAP: usa `gsap.context()` para cleanup en `useEffect` y evita re-renders innecesarios.
+- Implement automatic session timeout handling on the frontend: warn the user before expiry and redirect to login on timeout.
+- Never cache or store PHI in Redux, Zustand, or any client-side store beyond the session lifetime.
+- On logout or session expiry, clear all in-memory state that may contain PHI.
 
-## Separación lógica / markup con Custom Hooks
+## HIPAA & Accessibility Compliance
 
-- Extrae la lógica de negocio, side-effects y transformaciones de datos a custom hooks (`use<Feature>.ts`).
-- El componente solo debería contener JSX y bindeo de props; toda la lógica vive en el hook.
-- Patrón recomendado:
+- All UI must meet **WCAG 2.1 AA** standards: proper contrast ratios, keyboard navigation, focus management, and screen-reader support.
+- All form fields must have associated `<label>` elements or `aria-label` / `aria-labelledby` attributes.
+- Error messages must be accessible: use `aria-live="polite"` regions or `role="alert"` for form validation errors.
+- Use `role="status"` for loading indicators and async feedback.
+- Ensure audit-relevant user actions (login, data access, form submissions) are trackable by the backend — emit structured events or call audit endpoints when required.
+
+## Global Component Reuse
+
+- Before creating a new component, check if a reusable one already exists in `src/components/` or `src/shared/ui/`.
+- If a component is used in more than one feature, move it to `shared/ui/`.
+- Common project components: `Modal`, `Backdrop`, `DropdownMenu`, `Icon`, `ErrorBoundary`, buttons in `button/`.
+
+## Animation Performance
+
+- Prioritize `transform` and `opacity` for CSS animations (properties that do not trigger layout/paint).
+- Use `will-change` sparingly and only when there is measurable jank.
+- For Motion (framer-motion): prefer `layout` animations and `AnimatePresence` with `mode="wait"`.
+- Wrap heavy animated components in `React.memo` or `React.lazy` if they are not visible on initial load.
+- Prefer `requestAnimationFrame` over `setTimeout` for frame-synchronization.
+- GSAP: use `gsap.context()` for cleanup in `useEffect` and avoid unnecessary re-renders.
+
+## Logic / Markup Separation with Custom Hooks
+
+- Extract business logic, side-effects, and data transformations to custom hooks (`use<Feature>.ts`).
+- Components should only contain JSX and prop bindings; all logic lives in the hook.
+- Recommended pattern:
 
 ```tsx
 // hooks/useFeature.ts
@@ -61,6 +91,6 @@ export function useFeature() {
 // ui/FeatureView.tsx
 export function FeatureView() {
   const { data, handlers, state } = useFeature();
-  return <>{/* solo markup */}</>;
+  return <>{/* markup only */}</>;
 }
 ```
