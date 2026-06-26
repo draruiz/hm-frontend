@@ -105,70 +105,22 @@ export function ContactSubmissionsList() {
       </Stack>
 
       <Typography
-        sx={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: "0.6875rem",
-          letterSpacing: "0.15em",
-          color: "#94918a",
-          mb: 1.5,
-        }}
+        variant='overline'
+        color='text.secondary'
+        sx={{ display: "block", mb: 1.5 }}
       >
         Showing {filteredData.length} of {data.length} submissions
       </Typography>
 
-      <TableContainer
-        component={Paper}
-        sx={{ borderRadius: 0, boxShadow: "none" }}
-      >
+      <TableContainer component={Paper} variant='outlined'>
         <Table size='small' aria-label='Contact submissions table'>
           <TableHead>
-            <TableRow sx={{ bgcolor: "#f5f3ee" }}>
-              <TableCell
-                sx={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  color: "#94918a",
-                  fontSize: 12,
-                }}
-              >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  color: "#94918a",
-                  fontSize: 12,
-                }}
-              >
-                Email
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  color: "#94918a",
-                  fontSize: 12,
-                }}
-              >
-                Date
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  color: "#94918a",
-                  fontSize: 12,
-                }}
-              >
-                HIPAA
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  color: "#94918a",
-                  fontSize: 12,
-                }}
-                align='right'
-              >
-                Actions
-              </TableCell>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>HIPAA</TableCell>
+              <TableCell align='right'>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

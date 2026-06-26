@@ -41,6 +41,10 @@ const brand = {
   tealLight: "#e0f0f0",
 } as const;
 
+const FONT = "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif";
+const BORDER = "rgba(26,26,26,0.1)";
+const BORDER_SOFT = "rgba(26,26,26,0.08)";
+
 export const theme = createTheme({
   palette: {
     brand,
@@ -57,66 +61,96 @@ export const theme = createTheme({
       contrastText: brand.white,
     },
     background: {
-      default: brand.blue,
-      paper: brand.cream,
+      default: brand.cream,
+      paper: "#ffffff",
     },
     text: {
       primary: brand.charcoal,
-      secondary: brand.muted,
+      secondary: brand.gray,
     },
+    divider: BORDER_SOFT,
     error: {
       main: "#d32f2f",
     },
   },
   typography: {
-    fontFamily: "'Space Grotesk', system-ui, sans-serif",
+    fontFamily: FONT,
+    fontSize: 15,
     h1: {
-      fontFamily: "'Syne', sans-serif",
-      fontWeight: 800,
-      lineHeight: 0.95,
-      letterSpacing: "-0.03em",
-    },
-    h2: {
-      fontFamily: "'Syne', sans-serif",
-      fontWeight: 800,
-      lineHeight: 1.05,
+      fontWeight: 700,
+      fontSize: "2.75rem",
+      lineHeight: 1.1,
       letterSpacing: "-0.02em",
     },
-    h3: {
-      fontFamily: "'Syne', sans-serif",
+    h2: {
       fontWeight: 700,
+      fontSize: "2rem",
+      lineHeight: 1.2,
+      letterSpacing: "-0.015em",
+    },
+    h3: {
+      fontWeight: 700,
+      fontSize: "1.6rem",
+      lineHeight: 1.25,
+      letterSpacing: "-0.01em",
     },
     h4: {
-      fontFamily: "'Syne', sans-serif",
-      fontWeight: 700,
+      fontWeight: 600,
+      fontSize: "1.35rem",
+      lineHeight: 1.3,
+      letterSpacing: "-0.005em",
+    },
+    h5: {
+      fontWeight: 600,
+      fontSize: "1.15rem",
+      lineHeight: 1.35,
+    },
+    h6: {
+      fontWeight: 600,
+      fontSize: "1rem",
+      lineHeight: 1.4,
     },
     subtitle1: {
-      fontFamily: "'JetBrains Mono', monospace",
-      fontSize: "0.6875rem",
-      letterSpacing: "0.3em",
+      fontWeight: 600,
+      fontSize: "1rem",
+      lineHeight: 1.5,
+    },
+    subtitle2: {
+      fontWeight: 600,
+      fontSize: "0.875rem",
+      lineHeight: 1.5,
+    },
+    overline: {
+      fontWeight: 600,
+      fontSize: "0.7rem",
+      letterSpacing: "0.12em",
+      lineHeight: 2,
       textTransform: "uppercase" as const,
     },
     body1: {
-      fontFamily: "'Space Grotesk', system-ui, sans-serif",
-      fontWeight: 300,
-      lineHeight: 1.7,
+      fontWeight: 400,
+      fontSize: "1rem",
+      lineHeight: 1.65,
     },
     body2: {
-      fontFamily: "'Space Grotesk', system-ui, sans-serif",
-      fontWeight: 300,
-      fontSize: "0.875rem",
-      lineHeight: 1.7,
+      fontWeight: 400,
+      fontSize: "0.9375rem",
+      lineHeight: 1.6,
+    },
+    caption: {
+      fontWeight: 400,
+      fontSize: "0.8125rem",
+      lineHeight: 1.5,
     },
     button: {
-      fontFamily: "'Space Grotesk', system-ui, sans-serif",
       fontWeight: 600,
-      fontSize: "0.875rem",
-      letterSpacing: "0.15em",
-      textTransform: "uppercase" as const,
+      fontSize: "0.9375rem",
+      letterSpacing: "0.01em",
+      textTransform: "none" as const,
     },
   },
   shape: {
-    borderRadius: 0,
+    borderRadius: 10,
   },
   components: {
     MuiCssBaseline: {
@@ -132,12 +166,30 @@ export const theme = createTheme({
         },
       },
     },
-    MuiButton: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+      },
       styleOverrides: {
         root: {
-          borderRadius: 0,
+          backgroundImage: "none",
+        },
+        outlined: {
+          borderColor: BORDER_SOFT,
+        },
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
           boxShadow: "none",
-          transition: "all 0.5s ease",
+          paddingInline: 20,
+          paddingBlock: 10,
+          transition: "all 0.25s ease",
           "&:hover": {
             boxShadow: "none",
           },
@@ -145,18 +197,65 @@ export const theme = createTheme({
       },
     },
     MuiTextField: {
-      styleOverrides: {
-        root: {
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 0,
-          },
-        },
+      defaultProps: {
+        variant: "outlined",
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 0,
+          borderRadius: 8,
+          backgroundColor: "#ffffff",
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: BORDER,
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(26,26,26,0.25)",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontWeight: 500,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: BORDER_SOFT,
+        },
+        head: {
+          fontWeight: 600,
+          fontSize: "0.8125rem",
+          color: brand.muted,
+          backgroundColor: brand.cream,
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: brand.goldDark,
+          fontWeight: 600,
+          textUnderlineOffset: "2px",
         },
       },
     },

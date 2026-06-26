@@ -13,7 +13,15 @@ export function useAdminLayout() {
   const location = useLocation();
   const logout = useAppStore((s) => s.logout);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [railExpanded, setRailExpanded] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prev) => !prev);
+  };
+
+  const handleDrawerClose = () => {
+    setMobileOpen(false);
+  };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,6 +39,7 @@ export function useAdminLayout() {
 
   const handleNavigate = (path: string) => {
     navigate(path);
+    setMobileOpen(false);
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -39,8 +48,9 @@ export function useAdminLayout() {
     navItems: NAV_ITEMS,
     anchorEl,
     menuOpen: Boolean(anchorEl),
-    railExpanded,
-    setRailExpanded,
+    mobileOpen,
+    handleDrawerToggle,
+    handleDrawerClose,
     handleMenuOpen,
     handleMenuClose,
     handleLogout,

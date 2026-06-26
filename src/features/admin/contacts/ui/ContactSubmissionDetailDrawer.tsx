@@ -18,10 +18,10 @@ export function ContactSubmissionDetailDrawer() {
       open={!!selectedId}
       onClose={handleClose}
       slotProps={{
-        paper: { sx: { width: { xs: "100%", md: 480 }, borderRadius: 0 } },
+        paper: { sx: { width: { xs: "100%", md: 480 } } },
       }}
     >
-      <Box sx={{ p: 3, minHeight: "100vh", bgcolor: "#fafafa" }}>
+      <Box sx={{ p: 3, minHeight: "100vh", bgcolor: "background.paper" }}>
         <Box
           sx={{
             display: "flex",
@@ -30,14 +30,7 @@ export function ContactSubmissionDetailDrawer() {
             mb: 2,
           }}
         >
-          <Typography
-            variant='h6'
-            sx={{
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 800,
-              color: "#1a1a1a",
-            }}
-          >
+          <Typography variant='h5' color='text.primary'>
             Submission Detail
           </Typography>
           <IconButton onClick={handleClose} aria-label='Close detail drawer'>
@@ -66,15 +59,7 @@ export function ContactSubmissionDetailDrawer() {
             {(data.preferredDate || data.time) && (
               <>
                 <Divider sx={{ my: 0.5 }} />
-                <Typography
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: "0.6875rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "#94918a",
-                  }}
-                >
+                <Typography variant='overline' color='text.secondary'>
                   Preferred Schedule
                 </Typography>
                 {data.preferredDate && (

@@ -1,11 +1,12 @@
 import { create, type StateCreator } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 /* ──────────────────────────────────────────────
    Auth slice
    ────────────────────────────────────────────── */
 export interface AuthSlice {
   token: string | null;
+  tokenSavedAt: number | null;
   isAuthenticated: boolean;
   setToken: (token: string) => void;
   logout: () => void;
@@ -18,15 +19,14 @@ const createAuthSlice: StateCreator<
   AuthSlice
 > = (set) => ({
   token: null,
+  tokenSavedAt: null,
   isAuthenticated: false,
-  setToken: (token) => {
-    sessionStorage.setItem("access_token", token);
-    set({ token, isAuthenticated: true });
-  },
-  logout: () => {
-    sessionStorage.removeItem("access_token");
-    set({ token: null, isAuthenticated: false });
-  },
+  // Persistence is handled entirely by the `persist` middleware below;
+  // Zustand is the single source of truth for the session.
+  setToken: (token) =>
+    set({ token, tokenSavedAt: Date.now(), isAuthenticated: true }),
+  logout: () =>
+    set({ token: null, tokenSavedAt: null, isAuthenticated: false }),
 });
 
 /* ──────────────────────────────────────────────
@@ -60,9 +60,12 @@ export const useAppStore = create<AppStore>()(
     }),
     {
       name: "hm-app-store",
-      storage: createJSONStorage(() => sessionStorage),
-      // Only persist non-PHI, non-sensitive UI state
+      storage: createJSONStorage(() => localStorage),
+      // Persist auth token with timestamp (not PHI) and UI state
       partialize: (state) => ({
+        token: state.token,
+        tokenSavedAt: state.tokenSavedAt,
+        isAuthenticated: state.isAuthenticated,
         sidebarOpen: state.sidebarOpen,
       }),
     },

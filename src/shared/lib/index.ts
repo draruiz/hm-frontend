@@ -1,4 +1,4 @@
-export { isTokenExpired } from "./auth";
+export { isSessionValid, isTokenExpired } from "./auth";
 export { apiClient } from "./axios";
 export { sanitizeInput } from "./sanitize";
 export { useAppStore } from "./store";

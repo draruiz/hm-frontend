@@ -23,6 +23,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { PageHeader } from "../../../../shared/ui";
 import { useBlogPage } from "../hooks/useBlogPage";
 
 export default function BlogPage() {
@@ -50,80 +51,26 @@ export default function BlogPage() {
 
   return (
     <Box>
-      <Typography
-        sx={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: "0.6875rem",
-          letterSpacing: "0.3em",
-          textTransform: "uppercase",
-          color: "#94918a",
-          mb: 1.5,
-        }}
-      >
-        02 — Blog
-      </Typography>
-      <Typography
-        variant='h2'
-        sx={{
-          fontFamily: "'Syne', sans-serif",
-          fontWeight: 800,
-          color: "#1a1a1a",
-          fontSize: { xs: "1.75rem", md: "2.25rem" },
-          letterSpacing: "-0.02em",
-          lineHeight: 1.05,
-        }}
-      >
-        Blog Management
-      </Typography>
-
-      <Typography
-        sx={{
-          mt: 1.5,
-          maxWidth: 900,
-          fontSize: "0.95rem",
-          color: "#6b7280",
-          lineHeight: 1.65,
-        }}
-      >
-        Manage articles with secure validation and strict admin permissions. The
-        backend generates the slug automatically and handles publish timestamps
-        when status changes to published.
-      </Typography>
+      <PageHeader
+        eyebrow='Blog'
+        title='Blog Management'
+        description='Manage articles with secure validation and strict admin permissions. The backend generates the slug automatically and handles publish timestamps when status changes to published.'
+      />
 
       <Paper
         component='section'
-        elevation={0}
+        variant='outlined'
         sx={{
-          mt: 4,
-          border: "1px solid rgba(26,26,26,0.1)",
-          borderRadius: 0,
-          bgcolor: "#fafafa",
+          border: "1px solid",
+          borderColor: "divider",
           p: { xs: 2.5, md: 3.5 },
         }}
       >
-        <Typography
-          sx={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: "0.6875rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "#94918a",
-            mb: 1,
-          }}
-        >
+        <Typography variant='overline' color='text.secondary' sx={{ display: "block", mb: 0.5 }}>
           {editingArticleId ? "Editing article" : "Create new article"}
         </Typography>
 
-        <Typography
-          sx={{
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 700,
-            color: "#1a1a1a",
-            fontSize: { xs: "1.35rem", md: "1.6rem" },
-            letterSpacing: "-0.01em",
-            mb: 3,
-          }}
-        >
+        <Typography variant='h4' color='text.primary' sx={{ mb: 3 }}>
           {editingArticleId ? "Update Blog Article" : "New Blog Article"}
         </Typography>
 
@@ -265,10 +212,13 @@ export default function BlogPage() {
             {coverPreviewUrl && (
               <Box
                 sx={{
-                  border: "1px solid rgba(26,26,26,0.12)",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 2,
+                  overflow: "hidden",
                   width: "100%",
                   maxWidth: 420,
-                  bgcolor: "#fff",
+                  bgcolor: "background.paper",
                 }}
               >
                 <Box
@@ -314,15 +264,7 @@ export default function BlogPage() {
           justifyContent: "space-between",
         }}
       >
-        <Typography
-          sx={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: "0.6875rem",
-            letterSpacing: "0.15em",
-            color: "#94918a",
-            textTransform: "uppercase",
-          }}
-        >
+        <Typography variant='overline' color='text.secondary'>
           Articles ({articles.length})
         </Typography>
 
@@ -346,70 +288,22 @@ export default function BlogPage() {
       )}
 
       {!isLoading && !isError && (
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: 0,
-            boxShadow: "none",
-            border: "1px solid rgba(26,26,26,0.08)",
-          }}
-        >
+        <TableContainer component={Paper} variant='outlined'>
           <Table size='small' aria-label='Blog articles table'>
             <TableHead>
-              <TableRow sx={{ bgcolor: "#f5f3ee" }}>
-                <TableCell
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: "#94918a",
-                    fontSize: 12,
-                  }}
-                >
-                  Title
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: "#94918a",
-                    fontSize: 12,
-                  }}
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: "#94918a",
-                    fontSize: 12,
-                  }}
-                >
-                  Published
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: "#94918a",
-                    fontSize: 12,
-                  }}
-                >
-                  Updated
-                </TableCell>
-                <TableCell
-                  align='right'
-                  sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: "#94918a",
-                    fontSize: 12,
-                  }}
-                >
-                  Actions
-                </TableCell>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Published</TableCell>
+                <TableCell>Updated</TableCell>
+                <TableCell align='right'>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {articles.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>
-                    <Typography sx={{ py: 1.5, color: "#6b7280" }}>
+                    <Typography sx={{ py: 1.5 }} color='text.secondary'>
                       No articles found.
                     </Typography>
                   </TableCell>
@@ -418,12 +312,10 @@ export default function BlogPage() {
                 articles.map((article) => (
                   <TableRow key={article.id} hover>
                     <TableCell>
-                      <Typography sx={{ fontWeight: 600, color: "#1a1a1a" }}>
+                      <Typography variant='subtitle2' color='text.primary'>
                         {article.title}
                       </Typography>
-                      <Typography
-                        sx={{ color: "#6b7280", fontSize: "0.8125rem" }}
-                      >
+                      <Typography variant='caption' color='text.secondary'>
                         /{article.slug}
                       </Typography>
                     </TableCell>
@@ -431,19 +323,12 @@ export default function BlogPage() {
                       <Chip
                         size='small'
                         label={article.status}
-                        sx={{
-                          borderRadius: 0,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
-                          bgcolor:
-                            article.status === "published"
-                              ? "rgba(200,164,92,0.14)"
-                              : "rgba(26,26,26,0.06)",
-                          color:
-                            article.status === "published"
-                              ? "#8a6c2f"
-                              : "#6b7280",
-                        }}
+                        color={
+                          article.status === "published" ? "primary" : "default"
+                        }
+                        variant={
+                          article.status === "published" ? "filled" : "outlined"
+                        }
                       />
                     </TableCell>
                     <TableCell>

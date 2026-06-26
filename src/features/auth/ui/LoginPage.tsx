@@ -4,16 +4,17 @@ import {
   Box,
   Button,
   CircularProgress,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  OutlinedInput,
   Typography,
 } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import { useLogin } from "../hooks/useLogin";
 
 const LOGO_URL =
   "https://imagedelivery.net/B5r6pMfQRTYBHyjgaDFr8w/3d99200b-f6c7-41b4-5c63-c40b4fbc9000/public";
+
+// Calm, editorial wellness imagery (stable Unsplash CDN).
+const HERO_IMAGE_URL =
+  "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1600&q=80";
 
 export default function LoginPage() {
   const { form, onSubmit, serverError, isSubmitting } = useLogin();
@@ -28,164 +29,157 @@ export default function LoginPage() {
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         minHeight: "100vh",
-        bgcolor: "brand.blue",
+        bgcolor: "background.default",
       }}
     >
-      {/* ── Left Panel: Branding ── */}
+      {/* ── Left: Editorial image panel ── */}
       <Box
         sx={{
-          flex: { xs: "none", md: 1 },
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          p: { xs: 4, sm: 6, md: 8, lg: 10 },
-          minHeight: { xs: "40vh", md: "100vh" },
           position: "relative",
           overflow: "hidden",
-          "&::before": {
-            content: '""',
+          flex: { xs: "none", md: "1.15 1 0" },
+          minHeight: { xs: "38vh", md: "100vh" },
+          bgcolor: "#1a2332",
+        }}
+      >
+        {/* Image layer with slow Ken Burns zoom */}
+        <Box
+          aria-hidden
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${HERO_IMAGE_URL})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transformOrigin: "center",
+            animation: "heroZoom 18s ease-out forwards",
+            "@keyframes heroZoom": {
+              from: { transform: "scale(1.12)" },
+              to: { transform: "scale(1)" },
+            },
+          }}
+        />
+        {/* Gradient overlay for legibility */}
+        <Box
+          aria-hidden
+          sx={{
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at 30% 50%, rgba(200,164,92,0.06) 0%, transparent 70%)",
-            pointerEvents: "none",
-          },
-        }}
-      >
-        {/* Logo */}
-        <Box>
-          <Box
-            component='img'
-            src={LOGO_URL}
-            alt='Healthy Mind Specialists'
-            sx={{
-              height: { xs: 36, md: 44 },
-              width: "auto",
-              display: "block",
-              mb: { xs: 6, md: 0 },
-              filter: "brightness(0) invert(1)",
-            }}
-          />
-        </Box>
-
-        {/* Hero Text */}
-        <Box sx={{ position: "relative", zIndex: 1 }}>
-          <Typography
-            variant='subtitle1'
-            sx={{
-              color: "brand.gold",
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: "0.6875rem",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              mb: 2,
-            }}
-          >
-            Log in
-          </Typography>
-
-          <Typography
-            variant='h1'
-            sx={{
-              color: "brand.white",
-              fontSize: {
-                xs: "2.5rem",
-                sm: "3.5rem",
-                md: "3.5rem",
-                lg: "4.5rem",
-                xl: "5.5rem",
-              },
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 800,
-              lineHeight: 0.95,
-              letterSpacing: "-0.03em",
-              mb: 3,
-            }}
-          >
-            WELCOME
-            <br />
-            BACK
-          </Typography>
-
-          <Typography
-            variant='body1'
-            sx={{
-              color: "rgba(250,250,250,0.6)",
-              fontWeight: 300,
-              maxWidth: 380,
-              lineHeight: 1.7,
-              fontSize: { xs: "0.875rem", md: "1rem" },
-            }}
-          >
-            Sign back in to your account to access your
-            <br />
-            dashboard and manage your practice.
-          </Typography>
-        </Box>
-
-        {/* Bottom decorative line */}
-        <Box
-          sx={{
-            width: 48,
-            height: "1px",
-            bgcolor: "rgba(200,164,92,0.4)",
-            mt: { xs: 4, md: 0 },
+              "linear-gradient(180deg, rgba(10,15,26,0.55) 0%, rgba(10,15,26,0.25) 40%, rgba(10,15,26,0.85) 100%)",
           }}
         />
+
+        {/* Content over image */}
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            height: "100%",
+            minHeight: "inherit",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            p: { xs: 4, sm: 6, md: 8, lg: 10 },
+            color: "#fff",
+          }}
+        >
+          {/* Editorial quote */}
+          <Box sx={{ maxWidth: 460 }}>
+            <Box
+              sx={{
+                width: 56,
+                height: "2px",
+                bgcolor: "primary.main",
+                mb: { xs: 3, md: 4 },
+              }}
+            />
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontSize: { xs: "1.6rem", md: "2.1rem" },
+                lineHeight: 1.3,
+                letterSpacing: "-0.01em",
+                textWrap: "balance",
+              }}
+            >
+              A calm mind is the foundation of healing.
+            </Typography>
+            <Typography
+              variant='overline'
+              sx={{
+                display: "block",
+                mt: 3,
+                color: "rgba(255,255,255,0.65)",
+              }}
+            >
+              Healthy Mind Specialists Platform
+            </Typography>
+          </Box>
+        </Box>
       </Box>
 
-      {/* ── Right Panel: Form ── */}
+      {/* ── Right: Form panel ── */}
       <Box
         sx={{
-          flex: { xs: "none", md: 1 },
+          flex: { xs: "1 1 auto", md: "1 1 0" },
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: "brand.cream",
           p: { xs: 4, sm: 6, md: 8 },
-          minHeight: { xs: "60vh", md: "100vh" },
         }}
       >
         <Box
           sx={{
             width: "100%",
-            maxWidth: 440,
+            maxWidth: 400,
+            animation: "fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both",
+            "@keyframes fadeUp": {
+              from: { opacity: 0, transform: "translateY(12px)" },
+              to: { opacity: 1, transform: "translateY(0)" },
+            },
           }}
         >
-          <Typography
-            variant='h2'
+          <Box
+            component='img'
+            src={LOGO_URL}
+            alt='Healthy Mind Specialists'
             sx={{
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 800,
-              color: "brand.charcoal",
-              fontSize: {
-                xs: "1.75rem",
-                sm: "2rem",
-                md: "2.25rem",
-              },
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-              mb: 5,
+              height: { xs: 72, md: 88 },
+              width: "auto",
+              maxWidth: 300,
+              objectFit: "contain",
+              display: "block",
+              mx: "auto",
+              mb: { xs: 4, md: 5 },
             }}
+          />
+
+          <Typography
+            variant='overline'
+            color='primary.dark'
+            sx={{ display: "block", mb: 1.5 }}
           >
-            YOUR ACCOUNT
+            Welcome back
           </Typography>
 
-          {/* Server Error */}
+          <Typography
+            variant='h2'
+            color='text.primary'
+            sx={{ mb: 1, fontSize: { xs: "2rem", md: "2.4rem" } }}
+          >
+            Sign in
+          </Typography>
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 4 }}>
+            Access your dashboard and manage your practice.
+          </Typography>
+
           {serverError && (
             <Alert
               severity='error'
               role='alert'
               aria-live='assertive'
-              sx={{
-                mb: 3,
-                borderRadius: 0,
-                "& .MuiAlert-message": {
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "0.875rem",
-                },
-              }}
+              sx={{ mb: 3 }}
             >
               {serverError}
             </Alert>
@@ -197,190 +191,62 @@ export default function LoginPage() {
             noValidate
             autoComplete='off'
           >
-            {/* Email */}
-            <FormControl fullWidth error={!!errors.email} sx={{ mb: 3.5 }}>
-              <InputLabel
-                htmlFor='login-email'
-                shrink
-                sx={{
-                  position: "relative",
-                  transform: "none",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "brand.charcoal",
-                  mb: 1,
-                }}
-              >
-                Email
-              </InputLabel>
-              <OutlinedInput
-                id='login-email'
-                type='email'
-                inputMode='email'
-                autoComplete='off'
-                placeholder='you@example.com'
-                aria-describedby='email-error'
-                {...register("email")}
-                sx={{
-                  bgcolor: "transparent",
-                  borderRadius: 0,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(26,26,26,0.15)",
-                    borderWidth: "0 0 1px 0",
-                    borderRadius: 0,
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(26,26,26,0.3)",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "brand.gold",
-                    borderWidth: "0 0 2px 0",
-                  },
-                  "& input": {
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    fontWeight: 300,
-                    fontSize: "0.9375rem",
-                    py: 1.5,
-                    px: 0,
-                  },
-                  "& input::placeholder": {
-                    color: "rgba(26,26,26,0.3)",
-                    opacity: 1,
-                  },
-                }}
-              />
-              {errors.email && (
-                <FormHelperText
-                  id='email-error'
-                  role='alert'
-                  aria-live='polite'
-                  sx={{
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    mx: 0,
-                  }}
-                >
-                  {errors.email.message}
-                </FormHelperText>
-              )}
-            </FormControl>
+            <TextField
+              fullWidth
+              id='login-email'
+              label='Email'
+              type='email'
+              inputMode='email'
+              autoComplete='off'
+              placeholder='you@example.com'
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              sx={{ mb: 3 }}
+              {...register("email")}
+            />
 
-            {/* Password */}
-            <FormControl fullWidth error={!!errors.password} sx={{ mb: 5 }}>
-              <InputLabel
-                htmlFor='login-password'
-                shrink
-                sx={{
-                  position: "relative",
-                  transform: "none",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "brand.charcoal",
-                  mb: 1,
-                }}
-              >
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id='login-password'
-                type='password'
-                autoComplete='off'
-                aria-describedby='password-error'
-                {...register("password")}
-                sx={{
-                  bgcolor: "transparent",
-                  borderRadius: 0,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(26,26,26,0.15)",
-                    borderWidth: "0 0 1px 0",
-                    borderRadius: 0,
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "rgba(26,26,26,0.3)",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "brand.gold",
-                    borderWidth: "0 0 2px 0",
-                  },
-                  "& input": {
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    fontWeight: 300,
-                    fontSize: "0.9375rem",
-                    py: 1.5,
-                    px: 0,
-                  },
-                }}
-              />
-              {errors.password && (
-                <FormHelperText
-                  id='password-error'
-                  role='alert'
-                  aria-live='polite'
-                  sx={{
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    mx: 0,
-                  }}
-                >
-                  {errors.password.message}
-                </FormHelperText>
-              )}
-            </FormControl>
+            <TextField
+              fullWidth
+              id='login-password'
+              label='Password'
+              type='password'
+              autoComplete='off'
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              sx={{ mb: 4 }}
+              {...register("password")}
+            />
 
-            {/* Submit */}
             <Button
               type='submit'
               variant='contained'
+              color='primary'
+              size='large'
+              fullWidth
               disabled={isSubmitting}
-              disableElevation
-              sx={{
-                bgcolor: "brand.gold",
-                color: "brand.blue",
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontWeight: 600,
-                fontSize: "0.8125rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                px: 4,
-                py: 1.75,
-                borderRadius: 0,
-                transition: "all 0.5s ease",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 1.5,
-                "&:hover": {
-                  bgcolor: "brand.goldLight",
-                },
-                "&:disabled": {
-                  bgcolor: "rgba(200,164,92,0.5)",
-                  color: "rgba(10,15,26,0.5)",
-                },
-              }}
-            >
-              {isSubmitting ? (
-                <CircularProgress
-                  size={18}
-                  role='status'
-                  aria-label='Signing in'
-                  sx={{ color: "brand.blue" }}
-                />
-              ) : (
-                <>
-                  <span>Log in</span>
+              endIcon={
+                !isSubmitting && (
                   <ArrowForwardIcon
                     sx={{
-                      fontSize: 16,
-                      transition: "transform 0.3s ease",
+                      transition: "transform 0.25s ease",
                       ".MuiButton-root:hover &": {
-                        transform: "translateX(6px)",
+                        transform: "translateX(4px)",
                       },
                     }}
                   />
-                </>
+                )
+              }
+              sx={{ py: 1.5 }}
+            >
+              {isSubmitting ? (
+                <CircularProgress
+                  size={20}
+                  role='status'
+                  aria-label='Signing in'
+                  sx={{ color: "secondary.main" }}
+                />
+              ) : (
+                "Log in"
               )}
             </Button>
           </Box>
